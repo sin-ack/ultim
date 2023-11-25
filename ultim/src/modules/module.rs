@@ -17,6 +17,8 @@ pub struct Module {
     config: ModuleConfig,
 }
 
+type InitFn = fn(&mut ModuleBuilder, &serde_json::Value) -> Result<(), Box<dyn Error>>;
+
 impl Module {
     pub fn load_from_manifest(entry: ModuleManifestEntry) -> Result<Self, libloading::Error> {
         let library = unsafe { libloading::Library::new(entry.path) }?;
@@ -34,11 +36,9 @@ impl Module {
         &mut self,
         task_registry: &mut ModuleTaskRegistry,
     ) -> Result<(), Box<dyn Error>> {
-        let init: libloading::Symbol<
-            fn(&mut ModuleBuilder, &serde_json::Value) -> Result<(), Box<dyn Error>>,
-        > = unsafe { self.shared_library.get(b"ultim_init")? };
+        let init: libloading::Symbol<InitFn> = unsafe { self.shared_library.get(b"ultim_init")? };
         let mut builder = ModuleBuilder::for_module(&self.name, &mut self.config, task_registry);
 
-        Ok(init(&mut builder, &self.user_config)?)
+        init(&mut builder, &self.user_config)
     }
 }

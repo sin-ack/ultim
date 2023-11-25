@@ -1,10 +1,16 @@
 use log::debug;
 use sqlx::migrate::Migrator;
 
-use super::module::{Module, ModuleConfig};
+use super::module::ModuleConfig;
 
 pub struct ModuleTaskRegistry {
     migrators: Vec<&'static Migrator>,
+}
+
+impl Default for ModuleTaskRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ModuleTaskRegistry {

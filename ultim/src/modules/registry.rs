@@ -9,7 +9,7 @@ impl ModuleRegistry {
         let modules = manifest
             .modules
             .into_iter()
-            .map(|entry| Module::load_from_manifest(entry))
+            .map(Module::load_from_manifest)
             .collect::<Result<Vec<_>, _>>()?;
 
         Ok(Self { modules })
