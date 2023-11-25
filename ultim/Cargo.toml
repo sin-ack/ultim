@@ -7,6 +7,16 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4"
+libloading = "0.8.1"
+log = "0.4.20"
+serde = "1.0.193"
+serde_json = "1.0.108"
+simple_logger = "4.3.0"
+sqlx = { version = "0.7.3", features = ["postgres", "migrate", "json", "rust_decimal", "chrono", "runtime-tokio", "macros", "uuid", "ipnetwork"] }
+
+[lib]
+name = "ultim"
+path = "src/lib.rs"
 
 [[bin]]
 name = "ultim"
