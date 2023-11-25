@@ -2,8 +2,9 @@
 
 ## Building
 
-Build the example module first: `cargo -p example build`
-Then, run Ultim: `cargo run`
+1. Build the example module: `cargo -p example build`
+2. Run ultim: `cargo run`
+
 There's an example `manifest.json` that loads in the example module.
 
 ## License
