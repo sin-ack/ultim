@@ -1,6 +1,10 @@
 use actix_web::{web, App, HttpResponse, HttpServer};
-use ultim::modules::{manifest::ModuleManifest, registry::ModuleRegistry, builder::{ModuleBuilder, ModuleTaskRegistry}};
 use log::{info, trace};
+use ultim::modules::{
+    builder::ModuleTaskRegistry,
+    manifest::ModuleManifest,
+    registry::ModuleRegistry,
+};
 
 async fn index() -> HttpResponse {
     HttpResponse::Ok().body("Hello world!")
@@ -8,7 +12,11 @@ async fn index() -> HttpResponse {
 
 #[actix_web::main]
 pub async fn main() -> std::io::Result<()> {
-    simple_logger::init_with_env().unwrap();
+    simple_logger::SimpleLogger::new()
+        .with_level(log::LevelFilter::Warn)
+        .with_module_level("ultim", log::LevelFilter::Trace)
+        .init()
+        .unwrap();
     info!("Starting Ultim");
 
     let manifest = ModuleManifest::from_path("manifest.json").expect("Failed to load manifest");
@@ -24,7 +32,9 @@ pub async fn main() -> std::io::Result<()> {
     let mut task_registry = ModuleTaskRegistry::new();
 
     for module in registry.modules.iter_mut() {
-        module.initialize(&mut task_registry).expect("Failed to initialize module");
+        module
+            .initialize(&mut task_registry)
+            .expect("Failed to initialize module");
     }
 
     let server = HttpServer::new(|| App::new().service(web::resource("/").to(index)))
