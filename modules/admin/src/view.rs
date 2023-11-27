@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use actix_web::{http::Method, HttpResponse, Responder};
+use actix_web::{http::Method, HttpResponse};
 use diesel::{associations::HasTable, Expression, QueryDsl, SelectableExpression, Table};
 use ultim::Request;
 
@@ -10,7 +10,7 @@ pub enum PutPartial {
 }
 
 pub trait View {
-    fn dispatch(&self, request: &Request) -> Result<impl Responder, Box<dyn Error>> {
+    fn dispatch(&self, request: &Request) -> Result<HttpResponse, Box<dyn Error>> {
         match request.method() {
             &Method::GET => self.get(request),
             &Method::POST => self.post(request),
@@ -73,7 +73,7 @@ where
     fn get_filters(&self, request: &Request) -> Vec<Box<dyn Filter<Self::Query>>>;
     fn get_order(&self, request: &Request) -> Box<dyn Expression<SqlType = T::SqlType>>;
 
-    fn get(&self, request: &Request) -> Result<impl Responder, Box<dyn Error>> {
+    fn get(&self, request: &Request) -> Result<HttpResponse, Box<dyn Error>> {
         let mut query = self.get_query();
         for filter in self.get_filters(request) {
             query = filter.filter(query);
