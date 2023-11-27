@@ -2,6 +2,10 @@
     "version": "1",
     "modules": [
         {
+            "name": "admin",
+            "path": "target/debug/libadmin.so"
+        },
+        {
             "name": "example",
             "path": "target/debug/libexample.so",
             "config": {

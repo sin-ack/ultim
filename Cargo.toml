@@ -2,5 +2,6 @@
 resolver = "2"
 members = [
     "ultim",
-    "modules/example"
+    "modules/admin",
+    "modules/example",
 ]

@@ -1,10 +1,15 @@
-use ultim::modules::builder::ModuleBuilder;
+use ultim_admin::AdminModule;
+
+mod panels;
 
 #[export_name = "ultim_init"]
 pub fn init(
-    _builder: &mut ModuleBuilder,
+    registry: &ultim::ModuleRegistry,
     config: &serde_json::Value,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    println!("{}", config["greeting"]);
+    registry.with_module::<AdminModule>("admin", |admin| {
+        admin.add_panel("Ultim", panels::PostPanel::new());
+        Ok(())
+    })?;
     Ok(())
 }
